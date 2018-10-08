@@ -106,6 +106,7 @@ filtered_d = filtered_d %>%
 
 Even better, let's split this into separate data frames for hypothesis 1 and hypothesis 2, since they are different types of experiments with different measurements, and therefore different analyses that will need to be performed. Now that we've cleaned up the data, this is pretty easy to do! We'll just drop the columns that are for the other hypothesis. The `select` function lets us choose which columns to remove (instead of which to keep) by putting a minus sign in front of them. First, let's create a dataset for the rating hypothesis by getting rid of the game performance columns:
 
+
 ```{r}
 rating_hyp_d = filtered_d %>% 
   filter(is.na(DoNotUseVideoGamePerformanceData)) %>% # first, let's get rid of the subjects who did so poorly on one game that their data is unusable
