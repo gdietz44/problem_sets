@@ -1,7 +1,7 @@
 ---
 title: 'Psych 251 PS4: Simulation'
 author: "Griffin Dietz"
-date: "2018"
+date: "November 11, 2018"
 output: 
   html_document:
     toc: true
@@ -11,13 +11,13 @@ This is problem set #3, in which we want you to integrate your knowledge of data
 
 For ease of reading, please separate your answers from our text by marking our text with the `>` character (indicating quotes). 
 
-```{r}
+```{r warning=FALSE}
 library(tidyverse)
 ```
 
 Let's start by convincing ourselves that t-tests have the appropriate false positive rate. Run 10,000 t-tests with standard, normally-distributed data from a made up 30-person, single-measurement experiment (the command for sampling from a normal distribution is `rnorm`). What's the mean number of "significant" results?
 
-> The mean number of significant results is about .05.
+> The mean number of significant results is about 500 (~5%).
 
 First do this using a `for` loop.
 
@@ -83,7 +83,7 @@ mean_rep
 
 Is there an inflation of false positives? How bad is it?
 
-> Yes. We now see and average number of signifianct results at around .071.
+> Yes. We now see the mean number of signifianct results is around 710 (~7.1%).
 
 Now modify this code so that you can investigate this "double the sample" rule in a bit more depth. Let's see what happens when you double the sample ANY time p > .05 (not just when p < .25), or when you do it only if p < .5 or < .75. How do these choices affect the false positive rate?
 
@@ -92,16 +92,31 @@ HINT: Try to do this by making the function `double.sample` take the upper p val
 HINT 2: You may need more samples. Find out by looking at how the results change from run to run.
 
 ```{r}
-mean_50 <- sum(replicate(10000, double.sample(.5))) / 10000
+sum_50 <- sum(replicate(30000, double.sample(.5)))
+sum_50
+mean_50 <- sum_50 / 30000
 mean_50
 
-mean_75 <- sum(replicate(10000, double.sample(.75))) / 10000
+sum_75 <- sum(replicate(30000, double.sample(.75)))
+sum_75
+mean_75 <- sum_75 / 30000
 mean_75
 
-mean_90 <- sum(replicate(10000, double.sample(.9))) / 10000
-mean_90
+sum_100 <- sum(replicate(50000, double.sample(1)))
+sum_100
+mean_100 <- sum_100 / 50000
+mean_100
 ```
 
 What do you conclude on the basis of this simulation? How bad is this kind of data-dependent policy?
 
-> ANSWER
+> When p-values are trending toward significance, adding additional data has a large capacity to affect the results. By doubling the amount of data when p-values are less than .25, we nearly are 50% more likely to find significant results in our t-test. However, as results become further from significant, adding this additional data has decreasing effect. When we double the data for all p-values, for instance, we only see an average of about 8.4% significant results, not a proportional increase over 7.1% for p-values less than .25. This is because continuing to add data when p-values are far from significant is less likely to swing the p-value to significant than adding that data when the p-value is already trending in the "right" direction.
+In summary, this data-dependent policy is bad regardless of what upper p-value threshold we use, because we will end up counting more results as significant than we should. However, it has a decreasing effect on results as upper p-values increase. It highlights the importance of establishing sample size before beginning to run a study.
+
+
+
+
+
+
+
+
